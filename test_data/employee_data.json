@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Rahul",
+        "department": "QA",
+        "salary": 50000
+    },
+    {
+        "name": "Naresh",
+        "department": "Developer",
+        "salary": 70000
+    },
+    {
+        "name": "Ravi",
+        "department": "DevOps",
+        "salary": 80000
+    }
+]
