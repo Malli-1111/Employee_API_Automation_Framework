@@ -164,7 +164,7 @@ class BaseAPI:
 
         try:
 
-            response = requests.delete(
+            response = session.delete(
                 f"{BASE_URL}{endpoint}",
                 headers=headers,
                 timeout=BaseAPI.TIMEOUT
