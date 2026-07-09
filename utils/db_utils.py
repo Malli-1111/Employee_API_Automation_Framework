@@ -25,10 +25,12 @@ class DBUtils:
 
         db = SessionLocal()
 
-        employee = db.query(Employee).filter(
-            Employee.id == employee_id
-        ).first()
+        try:
+            employee = db.query(Employee).filter(
+                Employee.id == employee_id
+            ).first()
 
-        db.close()
+            return employee
 
-        return employee
+        finally:
+            db.close()
