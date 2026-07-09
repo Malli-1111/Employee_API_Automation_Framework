@@ -1,3 +1,4 @@
+from utils.logger import logger
 class EmployeeAssertions:
 
     @staticmethod
@@ -46,6 +47,6 @@ class EmployeeAssertions:
 
         response_time = response.elapsed.total_seconds()
 
-        print(f"\nResponse Time: {response_time:.3f} sec")
+        logger.info(f"\nResponse Time: {response_time:.3f} sec")
 
         assert response_time < max_time    
