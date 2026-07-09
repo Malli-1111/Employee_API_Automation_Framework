@@ -1,5 +1,4 @@
 import json
-import pytest
 
 ENV = "dev"
 def load_config():
