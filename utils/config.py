@@ -1,10 +1,15 @@
 import json
+import os
 
-ENV = "dev"
+
 def load_config():
 
-    with open(f"config/{ENV}.json", "r") as file:
+    env = os.getenv("TEST_ENV", "dev")
+
+    with open(f"config/{env}.json", "r") as file:
         return json.load(file)
 
+
 config = load_config()
+
 BASE_URL = config["BASE_URL"]

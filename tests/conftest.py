@@ -4,6 +4,8 @@ from Api.employee_api import EmployeeAPI
 from Api.auth_api import AuthAPI
 from payloads.employee_payload import create_employee_payload
 
+import os
+
 def pytest_addoption(parser):
 
     parser.addoption(
@@ -12,6 +14,13 @@ def pytest_addoption(parser):
         default="dev",
         help="Environment Name"
     )
+
+
+def pytest_configure(config):
+
+    env = config.getoption("--env")
+
+    os.environ["TEST_ENV"] = env
     
 @pytest.fixture
 def access_token():
