@@ -1,8 +1,10 @@
 from Api.employee_api import EmployeeAPI
 from payloads.employee_payload import update_employee_payload
 from utils.assertions import EmployeeAssertions
+import pytest
 
-
+@pytest.mark.smoke
+@pytest.mark.regression
 def test_update_employee(employee_id, auth_headers):
 
     response = EmployeeAPI.update_employee(

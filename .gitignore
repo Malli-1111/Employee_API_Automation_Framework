@@ -41,3 +41,6 @@ dist/
 # Uploads (optional)
 uploads/*
 !uploads/.gitkeep
+
+allure-results/
+allure-report/
