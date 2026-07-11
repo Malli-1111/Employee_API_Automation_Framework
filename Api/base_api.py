@@ -1,11 +1,12 @@
-import requests
 import time
-
-from utils.config import BASE_URL
-from utils.logger import logger
+import requests
+from utils.allure_utils import AllureUtils
 
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+
+from utils.config import BASE_URL
+from utils.logger import logger
 
 session = requests.Session()
 
@@ -27,17 +28,19 @@ class BaseAPI:
     TIMEOUT = 10
 
     @staticmethod
-    def request(
-        method,
-        endpoint,
-        headers=None,
-        params=None,
-        json=None,
-        data=None,
-        files=None
-    ):
+    def request(method, endpoint, headers=None, params=None, json=None, data=None, files=None):
 
         logger.info(f"{method} Request : {endpoint}")
+
+        AllureUtils.attach_request(
+        method=method,
+        url=f"{BASE_URL}{endpoint}",
+        headers=headers,
+        params=params,
+        json_payload=json,
+        data=data
+        )
+    
 
         if headers:
             logger.info(f"Headers : {headers}")
@@ -69,7 +72,7 @@ class BaseAPI:
                 timeout=BaseAPI.TIMEOUT
             )
 
-            end_time = time.time()
+            execution_time = time.time() - start_time
 
             logger.info(f"Status Code : {response.status_code}")
 
@@ -78,15 +81,17 @@ class BaseAPI:
             except Exception:
                 logger.info(f"Response : {response.text}")
 
-            logger.info(
-                f"Execution Time : {end_time - start_time:.3f} sec"
-            )
-
+            logger.info(f"Execution Time : {execution_time:.3f} sec")
+            AllureUtils.attach_response(
+                 response,
+                 execution_time
+              )
             return response
 
         except requests.exceptions.RequestException as e:
 
             logger.error(f"{method} Request Failed : {e}")
+            AllureUtils.attach_exception(e)
 
             raise
 
