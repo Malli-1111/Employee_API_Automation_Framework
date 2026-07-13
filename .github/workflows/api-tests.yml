@@ -45,6 +45,11 @@ jobs:
 
       - name: Run API Tests
         run: pytest --alluredir=allure-results
+      
+      - name: Show Uvicorn Log on Failure
+        if: failure()
+        run: cat uvicorn.log
+
 
       - name: Upload Uvicorn Log
         uses: actions/upload-artifact@v4
