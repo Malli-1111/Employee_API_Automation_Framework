@@ -1,10 +1,18 @@
+from pathlib import Path
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.models import Employee
 
 
-DATABASE_URL = "sqlite:///./employee.db"
+# Project root directory
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Absolute path to employee.db
+DATABASE_PATH = BASE_DIR / "employee.db"
+
+DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
 
 engine = create_engine(
     DATABASE_URL,
