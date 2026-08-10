@@ -13,6 +13,45 @@ from payloads.employee_payload import create_employee_payload
 @pytest.fixture(scope="session", autouse=True)
 def start_fastapi():
 
+    # When FastAPI is already running in Docker,
+    # do not start another server.
+    if os.getenv("RUN_IN_DOCKER") == "true":
+
+        print("\n========== USING DOCKER FASTAPI ==========")
+
+        for _ in range(20):
+
+            try:
+                response = requests.get(
+                    "http://127.0.0.1:8000/docs",
+                    timeout=2
+                )
+
+                if response.status_code == 200:
+                    print(
+                        "\n========== DOCKER FASTAPI READY =========="
+                    )
+                    break
+
+            except requests.exceptions.RequestException:
+                pass
+
+            time.sleep(1)
+
+        else:
+            raise RuntimeError(
+                "Docker FastAPI server is not available."
+            )
+
+        yield
+
+        print(
+            "\n========== DOCKER FASTAPI IS RUNNING =========="
+        )
+
+        return
+
+    # Normal local execution
     print("\n========== STARTING FASTAPI ==========")
 
     process = subprocess.Popen(
