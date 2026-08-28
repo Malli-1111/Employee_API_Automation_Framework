@@ -1,9 +1,25 @@
+"""
+Authentication API test cases.
+
+This module validates successful login, invalid credentials,
+and missing credential scenarios for the authentication endpoint.
+"""
+
 from Api.auth_api import AuthAPI
 import pytest
+
 
 @pytest.mark.login
 @pytest.mark.smoke
 def test_valid_login():
+    """
+    Verify that a valid username and password return an access token.
+
+    Validates:
+        - Login is successful.
+        - Access token is returned.
+        - Access token is a string.
+    """
 
     token = AuthAPI.login()
 
@@ -14,6 +30,13 @@ def test_valid_login():
 @pytest.mark.login
 @pytest.mark.regression
 def test_invalid_username():
+    """
+    Verify that an invalid username is rejected.
+
+    Validates:
+        - API returns HTTP 401.
+        - API returns the expected authentication error message.
+    """
 
     response = AuthAPI.login(
         username="wronguser",
@@ -28,6 +51,13 @@ def test_invalid_username():
 @pytest.mark.login
 @pytest.mark.regression
 def test_invalid_password():
+    """
+    Verify that an invalid password is rejected.
+
+    Validates:
+        - API returns HTTP 401.
+        - API returns the expected authentication error message.
+    """
 
     response = AuthAPI.login(
         username="admin",
@@ -42,6 +72,12 @@ def test_invalid_password():
 @pytest.mark.login
 @pytest.mark.regression
 def test_blank_username():
+    """
+    Verify that a blank username is rejected.
+
+    Validates:
+        - API returns HTTP 422 for missing/invalid username input.
+    """
 
     response = AuthAPI.login(
         username="",
@@ -58,26 +94,41 @@ def test_blank_username():
 @pytest.mark.login
 @pytest.mark.regression
 def test_blank_password():
+    """
+    Verify that a blank password is rejected.
+
+    Validates:
+        - API returns HTTP 422 for missing/invalid password input.
+    """
 
     response = AuthAPI.login(
         username="admin",
         password="",
         return_response=True
     )
+
     print(response.status_code)
     print(response.text)
 
     assert response.status_code == 422
 
+
 @pytest.mark.login
 @pytest.mark.regression
 def test_blank_credentials():
+    """
+    Verify that blank username and password are rejected.
+
+    Validates:
+        - API returns HTTP 422 when both credentials are blank.
+    """
 
     response = AuthAPI.login(
         username="",
         password="",
         return_response=True
     )
+
     print(response.status_code)
     print(response.text)
 

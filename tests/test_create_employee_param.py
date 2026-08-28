@@ -1,3 +1,10 @@
+"""
+Parameterized employee creation API test cases.
+
+This module validates employee creation using multiple
+predefined payloads supplied through Pytest parameterization.
+"""
+
 import pytest
 
 from Api.employee_api import EmployeeAPI
@@ -24,6 +31,20 @@ from Api.employee_api import EmployeeAPI
     ]
 )
 def test_create_employee(auth_headers, payload):
+    """
+    Verify employee creation using multiple predefined payloads.
+
+    Args:
+        auth_headers: Authorization headers provided by the
+            authentication fixture.
+        payload: Employee data supplied by pytest parameterization.
+
+    Validates:
+        - Each employee creation request returns HTTP 201.
+        - Returned employee name matches the submitted name.
+        - Returned department matches the submitted department.
+        - Returned salary matches the submitted salary.
+    """
 
     response = EmployeeAPI.create_employee(
         payload,

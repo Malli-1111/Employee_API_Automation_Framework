@@ -1,3 +1,10 @@
+"""
+End-to-end employee workflow test cases.
+
+This module validates the complete employee lifecycle:
+create, retrieve, update, delete, and final deletion verification.
+"""
+
 from Api.employee_api import EmployeeAPI
 from payloads.employee_payload import (
     create_employee_payload,
@@ -5,10 +12,33 @@ from payloads.employee_payload import (
 )
 import pytest
 
+
 @pytest.mark.workflow
 @pytest.mark.e2e
 @pytest.mark.regression
 def test_employee_workflow(auth_headers):
+    """
+    Verify the complete employee management workflow.
+
+    The workflow performs the following operations:
+
+        1. Create an employee.
+        2. Retrieve the created employee.
+        3. Update the employee.
+        4. Delete the employee.
+        5. Verify that the employee no longer exists.
+
+    Args:
+        auth_headers: Authorization headers provided by the
+            authentication fixture.
+
+    Validates:
+        - Employee creation returns HTTP 201.
+        - Created employee can be retrieved.
+        - Employee details can be updated successfully.
+        - Employee can be deleted successfully.
+        - Deleted employee cannot be retrieved.
+    """
 
     # Create Employee
     create_response = EmployeeAPI.create_employee(
