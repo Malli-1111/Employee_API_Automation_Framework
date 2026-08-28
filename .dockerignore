@@ -1,0 +1,46 @@
+# Virtual environment
+.venv/
+
+# Git
+.git/
+.gitignore
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Pytest
+.pytest_cache/
+
+# Logs
+logs/
+*.log
+
+# Test reports
+reports/
+htmlcov/
+.coverage
+allure-results/
+allure-report/
+
+# SQLite database
+*.db
+*.sqlite3
+
+# IDE
+.vscode/
+
+# Environment files
+.env
+
+# Uploaded files
+uploads/*
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# OS files
+.DS_Store
+Thumbs.db
