@@ -1,8 +1,21 @@
+"""
+Allure reporting utilities for the API automation framework.
+
+This module provides reusable methods for attaching API request,
+response, and exception details to Allure reports.
+"""
+
 import json
 import allure
 
-
 class AllureUtils:
+    """
+    Provides reusable utilities for Allure API reporting.
+
+    The utility captures request details, response details,
+    execution time, and exception information so that API
+    test execution can be analyzed directly from the Allure report.
+    """
 
     @staticmethod
     def attach_request(
@@ -15,6 +28,17 @@ class AllureUtils:
     ):
         """
         Attach API request details to the Allure report.
+
+        Args:
+            method: HTTP method used for the request.
+            url: Complete API request URL.
+            headers: Optional HTTP request headers.
+            params: Optional query parameters.
+            json_payload: Optional JSON request payload.
+            data: Optional form data.
+
+        The request information is grouped inside an Allure
+        step named after the HTTP method.
         """
 
         with allure.step(f"{method} Request"):
@@ -66,6 +90,16 @@ class AllureUtils:
     ):
         """
         Attach API response details to the Allure report.
+
+        Args:
+            response: HTTP response returned by the API.
+            execution_time: Time taken to execute the API request
+                in seconds.
+
+        The response status code, execution time, response headers,
+        and response body are attached to the Allure report.
+        JSON responses are attached as JSON; non-JSON responses
+        are attached as plain text.
         """
 
         with allure.step("Response"):
@@ -108,6 +142,12 @@ class AllureUtils:
     def attach_exception(exception):
         """
         Attach exception details to the Allure report.
+
+        Args:
+            exception: Exception raised during API execution.
+
+        The exception message is attached to the Allure report
+        as plain text.
         """
 
         allure.attach(

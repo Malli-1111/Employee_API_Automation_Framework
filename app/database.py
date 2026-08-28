@@ -1,3 +1,10 @@
+"""
+Database configuration for the FastAPI application.
+
+This module configures the SQLite database connection and
+provides the SQLAlchemy engine, session factory, and declarative
+base used by the application's database models.
+"""
 from pathlib import Path
 
 from sqlalchemy import create_engine

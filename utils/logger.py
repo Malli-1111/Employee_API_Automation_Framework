@@ -1,3 +1,9 @@
+"""
+Centralized logging configuration for the API automation framework.
+
+Configures logging to write execution details to both the
+framework log file and the console.
+"""
 import logging
 import os
 

@@ -1,3 +1,9 @@
+"""
+Database utility module for backend validation.
+
+Provides database connectivity and reusable queries for validating
+API results against the SQLite database.
+"""
 from pathlib import Path
 
 from sqlalchemy import create_engine
@@ -27,9 +33,19 @@ SessionLocal = sessionmaker(
 
 
 class DBUtils:
+    """Provides reusable database queries for test validation."""
 
     @staticmethod
     def get_employee(employee_id):
+        """
+        Retrieve an employee from the database using the employee ID.
+
+        Args:
+            employee_id: Unique employee identifier.
+
+        Returns:
+            Employee | None: Matching employee record, or None if not found.
+        """
 
         db = SessionLocal()
 
