@@ -44,6 +44,8 @@ jobs:
           done
 
       - name: Run API Tests
+        env:
+          RUN_IN_DOCKER: "true"
         run: pytest --alluredir=allure-results
       
       - name: Show Uvicorn Log on Failure
