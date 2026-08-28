@@ -1,3 +1,9 @@
+"""
+Common API request layer for the automation framework.
+
+This module provides reusable HTTP request handling, retry configuration,
+logging, execution-time measurement, and Allure reporting.
+"""
 import time
 import requests
 from utils.allure_utils import AllureUtils
@@ -24,11 +30,35 @@ session.mount("https://", adapter)
 
 
 class BaseAPI:
+    """
+    Provides common HTTP operations for API automation.
 
+    All API-specific classes use this class instead of directly
+    calling the requests library.
+    """
     TIMEOUT = 10
 
     @staticmethod
     def request(method, endpoint, headers=None, params=None, json=None, data=None, files=None):
+        """
+        Send an HTTP request to the configured API endpoint.
+
+        Args:
+          method: HTTP method such as GET, POST, PUT, or DELETE.
+          endpoint: API endpoint path.
+          headers: Optional HTTP headers.
+          params: Optional query parameters.
+          json: Optional JSON request payload.
+          data: Optional form data.
+          files: Optional files for multipart upload.
+
+        Returns:
+          requests.Response: HTTP response returned by the API.
+
+        Raises:
+         requests.exceptions.RequestException:
+            If the HTTP request fails.
+        """
 
         logger.info(f"{method} Request : {endpoint}")
 
@@ -97,7 +127,7 @@ class BaseAPI:
 
     @staticmethod
     def get(endpoint, headers=None, params=None):
-
+        """Send a GET request to the specified endpoint."""
         return BaseAPI.request(
             method="GET",
             endpoint=endpoint,
@@ -107,7 +137,7 @@ class BaseAPI:
 
     @staticmethod
     def post(endpoint, json=None, data=None, files=None, headers=None):
-
+        """Send a POST request to the specified endpoint."""
         return BaseAPI.request(
             method="POST",
             endpoint=endpoint,
@@ -119,7 +149,7 @@ class BaseAPI:
 
     @staticmethod
     def put(endpoint, json=None, headers=None):
-
+        """Send a PUT request to the specified endpoint."""
         return BaseAPI.request(
             method="PUT",
             endpoint=endpoint,
@@ -129,7 +159,7 @@ class BaseAPI:
 
     @staticmethod
     def delete(endpoint, headers=None):
-
+        """Send a DELETE request to the specified endpoint."""
         return BaseAPI.request(
             method="DELETE",
             endpoint=endpoint,

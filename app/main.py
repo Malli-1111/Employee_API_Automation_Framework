@@ -1,30 +1,49 @@
-from typing import List
+"""
+FastAPI application for the Employee Management API.
 
-from fastapi import FastAPI, HTTPException, Depends
+This module defines the REST API endpoints for authentication,
+employee CRUD operations, pagination, and file uploads.
+
+The application uses SQLAlchemy for database operations and
+JWT-based authentication to protect employee and file-upload
+endpoints.
+"""
+
+from typing import List
+import os
+import shutil
+
+from fastapi import (
+    Depends,
+    FastAPI,
+    File,
+    HTTPException,
+    UploadFile
+)
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
+from app.auth import create_access_token, get_current_user
 from app.database import engine, SessionLocal
 from app.models import Base, Employee
-from app.schemas import (
-    EmployeeCreate,
-    EmployeeResponse,
-    LoginRequest
-)
-from app.auth import create_access_token, get_current_user
-from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import Depends, HTTPException
-from fastapi import UploadFile, File
-import shutil
-import os
+from app.schemas import EmployeeCreate, EmployeeResponse
 
+# Create database tables when the application starts.
 Base.metadata.create_all(bind=engine)
 
+# Create the FastAPI application instance.
 app = FastAPI()
 
 
 @app.get("/")
 def home():
+    """
+    Return a welcome message for the Employee Management API.
+
+    Returns:
+        dict: Welcome message.
+    """
+
     return {
         "message": "Welcome to Employee Management API"
     }
@@ -35,6 +54,16 @@ def create_employee(
     employee: EmployeeCreate,
     current_user: str = Depends(get_current_user)
 ):
+    """
+    Create a new employee in the database.
+
+    Args:
+        employee: Validated employee creation payload.
+        current_user: Authenticated username obtained from the JWT token.
+
+    Returns:
+        Employee: Newly created employee record.
+    """
 
     db: Session = SessionLocal()
 
@@ -58,6 +87,17 @@ def get_all_employees(
     limit: int = 5,
     current_user: str = Depends(get_current_user)
 ):
+    """
+    Retrieve employees using pagination.
+
+    Args:
+        page: Page number to retrieve.
+        limit: Maximum number of employees returned per page.
+        current_user: Authenticated username obtained from the JWT token.
+
+    Returns:
+        list[Employee]: Employees for the requested page.
+    """
 
     db: Session = SessionLocal()
 
@@ -72,11 +112,25 @@ def get_all_employees(
 
     return employees
 
+
 @app.get("/employees/{employee_id}", response_model=EmployeeResponse)
 def get_employee(
     employee_id: int,
     current_user: str = Depends(get_current_user)
 ):
+    """
+    Retrieve an employee by ID.
+
+    Args:
+        employee_id: Unique employee identifier.
+        current_user: Authenticated username obtained from the JWT token.
+
+    Returns:
+        Employee: Matching employee record.
+
+    Raises:
+        HTTPException: 404 if the employee does not exist.
+    """
 
     db: Session = SessionLocal()
 
@@ -101,6 +155,20 @@ def update_employee(
     employee: EmployeeCreate,
     current_user: str = Depends(get_current_user)
 ):
+    """
+    Update an existing employee.
+
+    Args:
+        employee_id: Unique employee identifier.
+        employee: Updated employee data.
+        current_user: Authenticated username obtained from the JWT token.
+
+    Returns:
+        Employee: Updated employee record.
+
+    Raises:
+        HTTPException: 404 if the employee does not exist.
+    """
 
     db: Session = SessionLocal()
 
@@ -131,6 +199,19 @@ def delete_employee(
     employee_id: int,
     current_user: str = Depends(get_current_user)
 ):
+    """
+    Delete an employee by ID.
+
+    Args:
+        employee_id: Unique employee identifier.
+        current_user: Authenticated username obtained from the JWT token.
+
+    Returns:
+        dict: Successful deletion message.
+
+    Raises:
+        HTTPException: 404 if the employee does not exist.
+    """
 
     db: Session = SessionLocal()
 
@@ -156,6 +237,18 @@ def delete_employee(
 
 @app.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    """
+    Authenticate a user and generate a JWT access token.
+
+    Args:
+        form_data: OAuth2 username and password form data.
+
+    Returns:
+        dict: JWT access token and token type.
+
+    Raises:
+        HTTPException: 401 if the credentials are invalid.
+    """
 
     if (
         form_data.username == "admin"
@@ -175,11 +268,23 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
         status_code=401,
         detail="Invalid username or password"
     )
+
+
 @app.post("/upload")
 def upload_file(
     file: UploadFile = File(...),
     current_user: str = Depends(get_current_user)
 ):
+    """
+    Upload a file to the application's uploads directory.
+
+    Args:
+        file: Multipart file received from the client.
+        current_user: Authenticated username obtained from the JWT token.
+
+    Returns:
+        dict: Upload success message and uploaded filename.
+    """
 
     os.makedirs("uploads", exist_ok=True)
 
