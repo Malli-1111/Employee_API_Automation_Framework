@@ -71,10 +71,12 @@ class BaseAPI:
         data=data
         )
     
+        safe_headers = (headers or {}).copy()
 
-        if headers:
-            logger.info(f"Headers : {headers}")
+        if "Authorization" in safe_headers:
+            safe_headers["Authorization"] = "Bearer ***"
 
+        logger.info(f"Headers : {safe_headers}")
         if params:
             logger.info(f"Query Params : {params}")
 
@@ -82,7 +84,12 @@ class BaseAPI:
             logger.info(f"JSON Payload : {json}")
 
         if data:
-            logger.info(f"Form Data : {data}")
+            safe_data = data.copy()
+
+            if "password" in safe_data:
+                safe_data["password"] = "***"
+
+            logger.info(f"Form Data : {safe_data}")
 
         if files:
             logger.info("Uploading File")
@@ -107,7 +114,18 @@ class BaseAPI:
             logger.info(f"Status Code : {response.status_code}")
 
             try:
-                logger.info(f"Response : {response.json()}")
+                response_data = response.json()
+
+                if isinstance(response_data, dict):
+                    safe_response = response_data.copy()
+
+                    if "access_token" in safe_response:
+                        safe_response["access_token"] = "***"
+
+                    logger.info(f"Response : {safe_response}")
+                else:
+                    logger.info(f"Response : {response_data}")
+
             except Exception:
                 logger.info(f"Response : {response.text}")
 
